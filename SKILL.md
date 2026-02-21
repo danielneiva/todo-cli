@@ -29,6 +29,7 @@ A complete GTD (Getting Things Done) CLI task manager using SQLite for persisten
 Install
 
 - Run the install script: `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash`
+- To automatically install this skill to OpenClaw: `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --openclaw`
 - Or manually download the binary from GitHub Releases and put it in your PATH.
 
 Initial Setup
