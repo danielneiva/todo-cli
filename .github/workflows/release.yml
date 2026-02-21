@@ -41,6 +41,6 @@ jobs:
         with:
           files: |
             builds/todo-cli.phar
-            dist/linux-x64
+            dist/linux/linux-x64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
