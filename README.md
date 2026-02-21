@@ -1,17 +1,22 @@
-<p align="center">
-  <img src="https://laravel-zero.com/assets/img/logo.png" alt="Laravel Zero Logo" width="250">
-</p>
-
 # Todo CLI - GTD Task Manager
 
 A powerful, command-line based task manager built on [Laravel Zero](https://laravel-zero.com/), following the **Getting Things Done (GTD)** methodology. It uses an embedded SQLite database (`~/.todo/database.sqlite`) to track your tasks seamlessly across terminal sessions.
 
-## 🚀 Getting Started
+## 🚀 Installation & Setup
 
-If this is your first time using Todo CLI, you need to set up the database and your preferences.
+Install `todo-cli` instantly using the installation script. It will automatically download the correct binary for your OS (or install the `todo-cli.phar` if a native binary isn't available).
 
 ```bash
-php todo-cli task:install
+curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash
+```
+
+> **For AI Agents (OpenClaw):** If you want to automatically install the `SKILL.md` instruction file into your `~/.openclaw/skills` directory, append `--openclaw` to the install command via bash:
+> `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --openclaw`
+
+Once installed, if this is your first time using Todo CLI, you need to set up the database and your preferences:
+
+```bash
+todo-cli task:install
 ```
 
 This interactive command will help you configure:
@@ -25,10 +30,10 @@ In GTD, any new thought or task should immediately go into your Inbox without ov
 
 ```bash
 # Add a new task (prompts interactively if flags are missing)
-php todo-cli task:add -n "Buy groceries" --category="Personal" --priority="High" --deadline="2026-02-25"
+todo-cli task:add -n "Buy groceries" --category="Personal" --priority="High" --deadline="2026-02-25"
 
 # Show everything currently in your inbox
-php todo-cli task:inbox
+todo-cli task:inbox
 ```
 
 ## 🔄 The GTD Workflow
@@ -37,7 +42,7 @@ Once tasks are in your Inbox, you "process" them by giving them the appropriate 
 
 ```bash
 # Change a task's status (prompts you with a list of available statuses)
-php todo-cli task:status 1
+todo-cli task:status 1
 ```
 
 * **Inbox**: Items just captured that haven't been processed yet.
@@ -53,19 +58,19 @@ When you want to see what's on your plate, you can list and filter your tasks.
 
 ```bash
 # List all active tasks
-php todo-cli task:list
+todo-cli task:list
 
 # Filter by a specific status
-php todo-cli task:list --status="Next Action"
+todo-cli task:list --status="Next Action"
 
 # Filter by category or priority
-php todo-cli task:list --category="Work" --priority="Urgent"
+todo-cli task:list --category="Work" --priority="Urgent"
 
 # Search within task names and descriptions
-php todo-cli task:list --search="groceries"
+todo-cli task:list --search="groceries"
 
 # See what's falling behind
-php todo-cli task:list --overdue
+todo-cli task:list --overdue
 ```
 
 ## 📝 Modifying Tasks
@@ -74,10 +79,10 @@ You can view complete details of a task or edit it.
 
 ```bash
 # View all details, description, and dates
-php todo-cli task:show 1
+todo-cli task:show 1
 
 # Edit task fields (press Enter to keep current values interactively)
-php todo-cli task:edit 1
+todo-cli task:edit 1
 ```
 
 ## 🔄 Weekly Review
@@ -85,7 +90,7 @@ php todo-cli task:edit 1
 The core of GTD is the Weekly Review. This interactive command helps you clear your Inbox, review all active tasks, and handle overdue deadlines one by one.
 
 ```bash
-php todo-cli task:review
+todo-cli task:review
 ```
 
 ## 🛠️ Tech Stack & Testing
@@ -98,7 +103,7 @@ This project uses:
 
 **Running Tests:**
 ```bash
-php todo-cli test
+todo-cli test
 ```
 
 ## 📦 Building Standalone Binaries
@@ -107,11 +112,11 @@ If you want to build standalone binaries (for macOS and Linux) that don't requir
 
 ```bash
 # First, build the phar archive
-php todo-cli app:build todo-cli.phar
+todo-cli app:build todo-cli.phar
 
-# Then package it into standalone binaries
-php -d memory_limit=-1 ./vendor/bin/phpacker build --src=./builds/todo-cli.phar --php=8.4 all
+# Then package it into standalone binaries using the configured phpacker.json
+php -d memory_limit=-1 ./vendor/bin/phpacker build
 ```
-The resulting binaries will be saved in `builds/build/`.
+The resulting binaries will be saved in the `dist/` directory.
 
 Enjoy getting things done from the terminal! 🎉
