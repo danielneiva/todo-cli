@@ -5,16 +5,22 @@ namespace App\Commands;
 use App\Enums\StatusType;
 use App\Models\Task;
 use App\Models\TaskStatus;
+use App\Commands\Concerns\EnsuresInstallation;
 use LaravelZero\Framework\Commands\Command;
 
 class ReviewCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:review';
 
     protected $description = 'Interactive weekly review — process inbox, review active tasks, handle overdue items';
 
     public function handle(): void
     {
+        $this->ensureInstalled();
+
+        $this->title('🔄 Weekly Review Process');
         $this->newLine();
         $this->info('  🔄 Weekly Review');
         $this->line('  ' . str_repeat('─', 50));

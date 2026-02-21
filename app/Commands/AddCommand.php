@@ -7,10 +7,13 @@ use App\Models\Task;
 use App\Models\TaskCategory;
 use App\Models\TaskPriority;
 use App\Models\TaskStatus;
+use App\Commands\Concerns\EnsuresInstallation;
 use LaravelZero\Framework\Commands\Command;
 
 class AddCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:add
         {--name= : Task name}
         {--description= : Task description}
@@ -21,15 +24,17 @@ class AddCommand extends Command
 
     protected $description = 'Create a new task';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $this->ensureInstalled();
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
 
         $name = $this->option('name') ?: $this->ask('Task name');
 
         if (empty($name)) {
             $this->error('  Task name is required.');
-            return;
+            return 1;
         }
 
         $description = $this->option('description') ?: $this->ask('Description (optional)');
@@ -93,15 +98,7 @@ class AddCommand extends Command
         $priorityName = $task->priority?->name ?? 'N/A';
         $this->line("  Status: {$statusName} | Priority: {$priorityName}");
         $this->newLine();
-    }
 
-    private function ensureInstalled(): void
-    {
-        try {
-            TaskStatus::count();
-        } catch (\Exception $e) {
-            $this->error('  Todo CLI is not set up yet. Run `todo task:install` first.');
-            exit(1);
-        }
+        return 0;
     }
 }

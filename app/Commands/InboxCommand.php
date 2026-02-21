@@ -4,23 +4,23 @@ namespace App\Commands;
 
 use App\Enums\StatusType;
 use App\Models\Task;
+use App\Commands\Concerns\EnsuresInstallation;
 use App\Models\TaskStatus;
 use LaravelZero\Framework\Commands\Command;
 
 class InboxCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:inbox';
 
     protected $description = 'Show all unprocessed tasks in your inbox';
 
     public function handle(): void
     {
-        $inboxStatuses = TaskStatus::where('type', StatusType::Inbox)->pluck('id');
+        $this->ensureInstalled();
 
-        if ($inboxStatuses->isEmpty()) {
-            $this->warn('  No inbox status found. Run `todo task:install` to set up.');
-            return;
-        }
+        $inboxStatuses = TaskStatus::where('type', StatusType::Inbox)->pluck('id');
 
         $tasks = Task::with(['priority', 'category'])
             ->whereIn('task_status_id', $inboxStatuses)

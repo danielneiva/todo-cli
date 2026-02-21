@@ -3,17 +3,22 @@
 namespace App\Commands;
 
 use App\Models\Task;
+use App\Commands\Concerns\EnsuresInstallation;
 use LaravelZero\Framework\Commands\Command;
 
 class ShowCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:show {id : The task ID}';
 
     protected $description = 'Show detailed information about a task';
 
     public function handle(): void
     {
-        $task = Task::with(['status', 'priority', 'category'])->find($this->argument('id'));
+        $this->ensureInstalled();
+
+        $task = Task::with(['status', 'category', 'priority'])->find($this->argument('id'));
 
         if (! $task) {
             $this->error("  Task #{$this->argument('id')} not found.");

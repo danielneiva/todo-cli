@@ -21,6 +21,32 @@ beforeEach(function () {
     TaskCategory::create(['name' => 'Personal']);
 });
 
+it('prompts user to install if database is empty', function () {
+    // Truncate statuses to simulate uninstalled state
+    TaskStatus::truncate();
+
+    $this->artisan('task:add')
+        ->expectsOutputToContain('Todo CLI is not set up yet')
+        ->assertExitCode(1);
+});
+
+it('creates a task interactively', function () {
+    $this->artisan('task:add')
+        ->expectsQuestion('Task name', 'Interactive Task')
+        ->expectsQuestion('Description (optional)', 'Test Description')
+        ->expectsChoice('Category', 'Work', ['Work', 'Personal', 'None'])
+        ->expectsChoice('Priority', 'High', ['Low', 'Medium', 'High'])
+        ->expectsQuestion('Deadline (YYYY-MM-DD, optional)', '2026-03-01')
+        ->expectsQuestion('Expected date (YYYY-MM-DD, optional)', '2026-02-25')
+        ->assertExitCode(0);
+
+    $task = Task::where('name', 'Interactive Task')->first();
+    expect($task)->not->toBeNull();
+    expect($task->description)->toBe('Test Description');
+    expect($task->category->name)->toBe('Work');
+    expect($task->priority->name)->toBe('High');
+});
+
 it('creates a task with flags', function () {
     $this->artisan('task:add', [
         '--name' => 'Test Task',

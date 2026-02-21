@@ -101,4 +101,17 @@ This project uses:
 php todo-cli test
 ```
 
+## 📦 Building Standalone Binaries
+
+If you want to build standalone binaries (for macOS and Linux) that don't require PHP to be installed on the host machine, you can use PHPacker. Because combining binaries requires higher memory, run it with the memory limit disabled:
+
+```bash
+# First, build the phar archive
+php todo-cli app:build todo-cli.phar
+
+# Then package it into standalone binaries
+php -d memory_limit=-1 ./vendor/bin/phpacker build --src=./builds/todo-cli.phar --php=8.4 all
+```
+The resulting binaries will be saved in `builds/build/`.
+
 Enjoy getting things done from the terminal! 🎉

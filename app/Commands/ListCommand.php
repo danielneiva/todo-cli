@@ -6,11 +6,14 @@ use App\Enums\StatusType;
 use App\Models\Task;
 use App\Models\TaskCategory;
 use App\Models\TaskPriority;
+use App\Commands\Concerns\EnsuresInstallation;
 use App\Models\TaskStatus;
 use LaravelZero\Framework\Commands\Command;
 
 class ListCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:list
         {--status= : Filter by status name}
         {--category= : Filter by category name}
@@ -23,6 +26,8 @@ class ListCommand extends Command
 
     public function handle(): void
     {
+        $this->ensureInstalled();
+
         $query = Task::with(['status', 'priority', 'category']);
 
         // Status filter

@@ -5,21 +5,28 @@ namespace App\Commands;
 use App\Enums\StatusType;
 use App\Models\Task;
 use App\Models\TaskStatus;
+use App\Commands\Concerns\EnsuresInstallation;
 use LaravelZero\Framework\Commands\Command;
 
 class StatusCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:status {id : The task ID} {status? : The new status name}';
 
     protected $description = 'Change a task\'s status';
 
-    public function handle(): void
+    public function handle(): int
     {
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
+
         $task = Task::with('status')->find($this->argument('id'));
 
         if (! $task) {
             $this->error("  Task #{$this->argument('id')} not found.");
-            return;
+            return 1;
         }
 
         $this->info("  Task #{$task->id}: {$task->name}");
@@ -34,7 +41,7 @@ class StatusCommand extends Command
             if (! $newStatus) {
                 $this->error("  Status \"{$statusName}\" not found.");
                 $this->line('  Available statuses: ' . TaskStatus::pluck('name')->implode(', '));
-                return;
+                return 1;
             }
         } else {
             $statuses = TaskStatus::all();

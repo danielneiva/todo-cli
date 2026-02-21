@@ -5,10 +5,13 @@ namespace App\Commands;
 use App\Models\Task;
 use App\Models\TaskCategory;
 use App\Models\TaskPriority;
+use App\Commands\Concerns\EnsuresInstallation;
 use LaravelZero\Framework\Commands\Command;
 
 class EditCommand extends Command
 {
+    use EnsuresInstallation;
+
     protected $signature = 'task:edit {id : The task ID}
         {--name= : New name}
         {--description= : New description}
@@ -19,13 +22,17 @@ class EditCommand extends Command
 
     protected $description = 'Edit an existing task';
 
-    public function handle(): void
+    public function handle(): int
     {
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
+
         $task = Task::with(['status', 'priority', 'category'])->find($this->argument('id'));
 
         if (! $task) {
             $this->error("  Task #{$this->argument('id')} not found.");
-            return;
+            return 1;
         }
 
         $this->info("  ✏️  Editing Task #{$task->id}: {$task->name}");
@@ -46,6 +53,8 @@ class EditCommand extends Command
         $this->newLine();
         $this->info("  ✅ Task #{$task->id} updated.");
         $this->newLine();
+
+        return 0;
     }
 
     private function applyFlags(Task $task): void
