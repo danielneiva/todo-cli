@@ -5,6 +5,11 @@ REPO="danielneiva/todo-cli"
 INSTALL_DIR="/usr/local/bin"
 BIN_NAME="todo-cli"
 
+INSTALL_OPENCLAW=false
+if [ "$1" = "--openclaw" ]; then
+    INSTALL_OPENCLAW=true
+fi
+
 echo "Fetching latest release from $REPO..."
 
 # Get the latest release from GitHub API
@@ -46,3 +51,11 @@ else
 fi
 
 echo "Installation complete! Run '$BIN_NAME' to get started."
+
+if [ "$INSTALL_OPENCLAW" = true ]; then
+    echo "Installing OpenClaw skill..."
+    OPENCLAW_DIR="$HOME/.openclaw/skills/$BIN_NAME"
+    mkdir -p "$OPENCLAW_DIR"
+    curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.md" -o "$OPENCLAW_DIR/SKILL.md"
+    echo "Skill installed to $OPENCLAW_DIR/SKILL.md"
+fi
