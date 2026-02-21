@@ -34,10 +34,7 @@ jobs:
         run: composer require --dev --ignore-platform-reqs phpacker/phpacker
 
       - name: Build Standalone Linux Binary
-        run: php -d memory_limit=-1 ./vendor/bin/phpacker build:linux
-
-      - name: Build Standalone macOS Binary (Intel/ARM)
-        run: php -d memory_limit=-1 ./vendor/bin/phpacker build:mac
+        run: php -d memory_limit=-1 ./vendor/bin/phpacker build
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
