@@ -18,19 +18,19 @@ class StatusCommand extends Command
 
     public function handle(): int
     {
-        if (! $this->checkInstallation()) {
+        if (!$this->checkInstallation()) {
             return 1;
         }
 
         $task = Task::with('status')->find($this->argument('id'));
 
-        if (! $task) {
+        if (!$task) {
             $this->error("  Task #{$this->argument('id')} not found.");
             return 1;
         }
 
         $this->info("  Task #{$task->id}: {$task->name}");
-        $this->line("  Current status: <fg=cyan>{$task->status?->name}</>");
+        $this->line("  Current status: <fg=cyan>{$task->status->name}</>");
         $this->newLine();
 
         $statusName = $this->argument('status');
@@ -38,12 +38,13 @@ class StatusCommand extends Command
 
         if ($statusName) {
             $newStatus = TaskStatus::where('name', 'like', "%{$statusName}%")->first();
-            if (! $newStatus) {
+            if (!$newStatus) {
                 $this->error("  Status \"{$statusName}\" not found.");
                 $this->line('  Available statuses: ' . TaskStatus::pluck('name')->implode(', '));
                 return 1;
             }
-        } else {
+        }
+        else {
             $statuses = TaskStatus::all();
             $statusNames = $statuses->pluck('name')->toArray();
             $chosen = $this->choice('Move to status', $statusNames);
@@ -55,7 +56,8 @@ class StatusCommand extends Command
         // Auto-set completed_at when moving to done
         if ($newStatus->type === StatusType::Done) {
             $task->completed_at = now();
-        } elseif ($task->completed_at !== null) {
+        }
+        elseif ($task->completed_at !== null) {
             // Clear completed_at if moving away from done
             $task->completed_at = null;
         }
@@ -69,5 +71,7 @@ class StatusCommand extends Command
         }
 
         $this->newLine();
+
+        return 0;
     }
 }

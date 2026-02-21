@@ -66,17 +66,17 @@ class AddCommand extends Command
 
         if ($priorityOption) {
             $priority = TaskPriority::where('name', $priorityOption)->first();
-            $priorityId = $priority?->id ?? $priorities->first()?->id;
+            $priorityId = $priority ? $priority->id : $priorities->first()->id;
         } else {
             $priorityNames = $priorities->pluck('name')->toArray();
             $defaultIndex = (int) floor(count($priorityNames) / 2); // default to middle
             $chosen = $this->choice('Priority', $priorityNames, $defaultIndex);
-            $priorityId = $priorities->where('name', $chosen)->first()?->id;
+            $priorityId = $priorities->where('name', $chosen)->first()->id;
         }
 
         // Status — always starts in Inbox (GTD: capture first)
         $inboxStatus = TaskStatus::where('type', StatusType::Inbox)->first();
-        $statusId = $inboxStatus?->id ?? TaskStatus::first()?->id;
+        $statusId = $inboxStatus ? $inboxStatus->id : TaskStatus::first()->id;
 
         // Dates
         $deadline = $this->option('deadline') ?: $this->ask('Deadline (YYYY-MM-DD, optional)');
@@ -94,8 +94,8 @@ class AddCommand extends Command
 
         $this->newLine();
         $this->info("  ✅ Task #{$task->id} created: {$task->name}");
-        $statusName = $inboxStatus?->name ?? 'N/A';
-        $priorityName = $task->priority?->name ?? 'N/A';
+        $statusName = $inboxStatus ? $inboxStatus->name : 'N/A';
+        $priorityName = $task->priority->name;
         $this->line("  Status: {$statusName} | Priority: {$priorityName}");
         $this->newLine();
 

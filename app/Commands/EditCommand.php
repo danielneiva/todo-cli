@@ -82,11 +82,11 @@ class EditCommand extends Command
         }
 
         if ($deadline = $this->option('deadline')) {
-            $task->deadline = $deadline === 'clear' ? null : $deadline;
+            $task->deadline = clone \Illuminate\Support\Carbon::parse($deadline === 'clear' ? null : $deadline);
         }
 
         if ($expectedDate = $this->option('expected-date')) {
-            $task->expected_date = $expectedDate === 'clear' ? null : $expectedDate;
+            $task->expected_date = clone \Illuminate\Support\Carbon::parse($expectedDate === 'clear' ? null : $expectedDate);
         }
     }
 
@@ -108,7 +108,7 @@ class EditCommand extends Command
         // Category
         $categories = TaskCategory::all();
         if ($categories->isNotEmpty()) {
-            $currentCat = $task->category?->name ?? 'None';
+            $currentCat = $task->category->name ?? 'None';
             $catNames = $categories->pluck('name')->toArray();
             $catNames[] = 'None';
             $catNames[] = "Keep ({$currentCat})";
@@ -123,7 +123,7 @@ class EditCommand extends Command
 
         // Priority
         $priorities = TaskPriority::orderBy('level')->get();
-        $currentPri = $task->priority?->name ?? '-';
+        $currentPri = $task->priority->name;
         $priNames = $priorities->pluck('name')->toArray();
         $priNames[] = "Keep ({$currentPri})";
 

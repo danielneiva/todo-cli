@@ -14,15 +14,17 @@ class ShowCommand extends Command
 
     protected $description = 'Show detailed information about a task';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $this->ensureInstalled();
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
 
         $task = Task::with(['status', 'category', 'priority'])->find($this->argument('id'));
 
         if (! $task) {
             $this->error("  Task #{$this->argument('id')} not found.");
-            return;
+            return 1;
         }
 
         $this->newLine();
@@ -37,9 +39,9 @@ class ShowCommand extends Command
         $this->newLine();
 
         $details = [
-            ['Status', $task->status?->name ?? '-'],
-            ['Priority', $task->priority?->name ?? '-'],
-            ['Category', $task->category?->name ?? '-'],
+            ['Status', $task->status->name],
+            ['Priority', $task->priority->name],
+            ['Category', $task->category->name ?? '-'],
             ['Deadline', $task->deadline?->format('Y-m-d') ?? '-'],
             ['Expected Date', $task->expected_date?->format('Y-m-d') ?? '-'],
             ['Created', $task->created_at?->format('Y-m-d H:i')],
@@ -62,5 +64,7 @@ class ShowCommand extends Command
         }
 
         $this->newLine();
+
+        return 0;
     }
 }

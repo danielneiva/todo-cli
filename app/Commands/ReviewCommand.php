@@ -16,9 +16,11 @@ class ReviewCommand extends Command
 
     protected $description = 'Interactive weekly review — process inbox, review active tasks, handle overdue items';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $this->ensureInstalled();
+        if (!$this->checkInstallation()) {
+            return 1;
+        }
 
         $this->title('🔄 Weekly Review Process');
         $this->newLine();
@@ -33,6 +35,8 @@ class ReviewCommand extends Command
         $this->newLine();
         $this->info('  ✅ Review complete!');
         $this->newLine();
+
+        return 0;
     }
 
     private function processInbox(): void
@@ -104,15 +108,16 @@ class ReviewCommand extends Command
         $statusNames[] = 'Keep as is';
 
         foreach ($tasks as $task) {
-            $statusLabel = $task->status?->name ?? '-';
-            $priorityLabel = $task->priority?->name ?? '-';
+            $statusLabel = $task->status->name;
+            $priorityLabel = $task->priority->name;
             $this->line("  <fg=white;options=bold>#{$task->id}</> {$task->name} <fg=gray>[{$statusLabel} | {$priorityLabel}]</>");
 
             if ($task->deadline) {
                 $deadlineStr = $task->deadline->format('Y-m-d');
                 if ($task->isOverdue()) {
                     $this->line("    <fg=red>⚠ Overdue: {$deadlineStr}</>");
-                } else {
+                }
+                else {
                     $this->line("    <fg=gray>Deadline: {$deadlineStr}</>");
                 }
             }
@@ -170,11 +175,11 @@ class ReviewCommand extends Command
             ], 0);
 
             match ($action) {
-                'Reschedule' => $this->rescheduleTask($task),
-                'Mark as done' => $this->completeTask($task),
-                'Cancel' => $this->cancelTask($task),
-                'Skip' => $this->line('    → Skipped'),
-            };
+                    'Reschedule' => $this->rescheduleTask($task),
+                    'Mark as done' => $this->completeTask($task),
+                    'Cancel' => $this->cancelTask($task),
+                    default => $this->line('    → Skipped'),
+                };
         }
     }
 

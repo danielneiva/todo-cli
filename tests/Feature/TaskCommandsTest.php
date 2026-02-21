@@ -186,5 +186,5 @@ it('shows inbox tasks', function () {
 
 it('returns error for non-existent task', function () {
     $this->artisan('task:show', ['id' => 999])
-        ->assertExitCode(0); // outputs error but doesn't throw
+        ->assertExitCode(1); // outputs error
 });

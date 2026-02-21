@@ -24,9 +24,11 @@ class ListCommand extends Command
 
     protected $description = 'List and filter tasks';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $this->ensureInstalled();
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
 
         $query = Task::with(['status', 'priority', 'category']);
 
@@ -37,7 +39,7 @@ class ListCommand extends Command
                 $query->where('task_status_id', $status->id);
             } else {
                 $this->warn("  Status \"{$statusName}\" not found.");
-                return;
+                return 1;
             }
         } elseif (! $this->option('all')) {
             // By default, exclude done and cancelled
@@ -88,12 +90,12 @@ class ListCommand extends Command
 
         if ($tasks->isEmpty()) {
             $this->info('  No tasks found.');
-            return;
+            return 0;
         }
 
         $rows = $tasks->map(function (Task $task) {
-            $priorityName = $task->priority?->name ?? '-';
-            $priorityLevel = $task->priority?->level ?? 0;
+            $priorityName = $task->priority->name;
+            $priorityLevel = $task->priority->level;
 
             // Color-code priority
             $priority = match (true) {
@@ -113,9 +115,9 @@ class ListCommand extends Command
             return [
                 $task->id,
                 $task->name,
-                $task->category?->name ?? '-',
+                $task->category->name ?? '-',
                 $priority,
-                $task->status?->name ?? '-',
+                $task->status->name,
                 $deadline,
                 $task->expected_date?->format('Y-m-d') ?? '-',
             ];
@@ -126,5 +128,7 @@ class ListCommand extends Command
             ['ID', 'Name', 'Category', 'Priority', 'Status', 'Deadline', 'Expected'],
             $rows
         );
+
+        return 0;
     }
 }

@@ -16,9 +16,11 @@ class InboxCommand extends Command
 
     protected $description = 'Show all unprocessed tasks in your inbox';
 
-    public function handle(): void
+    public function handle(): int
     {
-        $this->ensureInstalled();
+        if (! $this->checkInstallation()) {
+            return 1;
+        }
 
         $inboxStatuses = TaskStatus::where('type', StatusType::Inbox)->pluck('id');
 
@@ -31,7 +33,7 @@ class InboxCommand extends Command
             $this->newLine();
             $this->info('  📭 Inbox is empty — you\'re all caught up!');
             $this->newLine();
-            return;
+            return 0;
         }
 
         $this->newLine();
@@ -41,8 +43,8 @@ class InboxCommand extends Command
         $rows = $tasks->map(fn (Task $task) => [
             $task->id,
             $task->name,
-            $task->category?->name ?? '-',
-            $task->priority?->name ?? '-',
+            $task->category->name ?? '-',
+            $task->priority->name,
             $task->deadline?->format('Y-m-d') ?? '-',
             $task->created_at?->format('Y-m-d'),
         ])->toArray();
@@ -54,5 +56,7 @@ class InboxCommand extends Command
 
         $this->line('  Tip: Run <fg=cyan>todo task:status {id} {status}</> to process items.');
         $this->newLine();
+
+        return 0;
     }
 }
