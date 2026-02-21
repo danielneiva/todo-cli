@@ -1,0 +1,9 @@
+{
+    "src": "builds/todo-cli.phar",
+    "dest": "dist",
+    "php": "8.4",
+    "platform": "linux",
+    "architectures": [
+        "x64"
+    ]
+}

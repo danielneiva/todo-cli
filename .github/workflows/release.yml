@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on semantic version tags like v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Binaries
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite3, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+      - name: Build PHAR
+        run: php todo-cli app:build todo-cli.phar
+
+      - name: Setup PHPacker
+        run: composer require --dev --ignore-platform-reqs crazywhalecc/static-php-cli crazywhalecc/phpacker
+
+      - name: Build Standalone Linux Binary
+        run: php -d memory_limit=-1 ./vendor/bin/phpacker build:linux
+
+      - name: Build Standalone macOS Binary (Intel/ARM)
+        run: php -d memory_limit=-1 ./vendor/bin/phpacker build:mac
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            builds/todo-cli.phar
+            dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
