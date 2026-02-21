@@ -31,7 +31,7 @@ jobs:
         run: php todo-cli app:build todo-cli.phar
 
       - name: Setup PHPacker
-        run: composer require --dev --ignore-platform-reqs crazywhalecc/static-php-cli crazywhalecc/phpacker
+        run: composer require --dev --ignore-platform-reqs phpacker/phpacker
 
       - name: Build Standalone Linux Binary
         run: php -d memory_limit=-1 ./vendor/bin/phpacker build:linux
