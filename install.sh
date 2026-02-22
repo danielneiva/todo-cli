@@ -6,8 +6,11 @@ INSTALL_DIR="/usr/local/bin"
 BIN_NAME="todo-cli"
 
 INSTALL_OPENCLAW=false
+INSTALL_ZEROCLAW=false
 if [ "$1" = "--openclaw" ]; then
     INSTALL_OPENCLAW=true
+elif [ "$1" = "--zeroclaw" ]; then
+    INSTALL_ZEROCLAW=true
 fi
 
 echo "Fetching latest release from $REPO..."
@@ -58,4 +61,10 @@ if [ "$INSTALL_OPENCLAW" = true ]; then
     mkdir -p "$OPENCLAW_DIR"
     curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.md" -o "$OPENCLAW_DIR/SKILL.md"
     echo "Skill installed to $OPENCLAW_DIR/SKILL.md"
+elif [ "$INSTALL_ZEROCLAW" = true ]; then
+    echo "Installing ZeroClaw skill..."
+    ZEROCLAW_DIR="$HOME/.zeroclaw/skills/$BIN_NAME"
+    mkdir -p "$ZEROCLAW_DIR"
+    curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.md" -o "$ZEROCLAW_DIR/SKILL.md"
+    echo "Skill installed to $ZEROCLAW_DIR/SKILL.md"
 fi

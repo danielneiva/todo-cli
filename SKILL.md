@@ -19,6 +19,21 @@ metadata:
             },
           ],
       },
+    "zeroclaw":
+      {
+        "emoji": "✅",
+        "requires": { "bins": ["todo-cli"], "env": [] },
+        "install":
+          [
+            {
+              "id": "bash",
+              "kind": "bash",
+              "script": "./install.sh",
+              "bins": ["todo-cli"],
+              "label": "Install todo-cli (bash)",
+            },
+          ],
+      },
   }
 ---
 
@@ -29,7 +44,9 @@ A complete GTD (Getting Things Done) CLI task manager using SQLite for persisten
 Install
 
 - Run the install script: `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash`
-- To automatically install this skill to OpenClaw: `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --openclaw`
+- To automatically install this skill to OpenClaw or ZeroClaw: 
+  `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --openclaw`
+  `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --zeroclaw`
 - Or manually download the binary from GitHub Releases and put it in your PATH.
 
 Initial Setup

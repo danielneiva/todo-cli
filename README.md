@@ -10,8 +10,9 @@ Install `todo-cli` instantly using the installation script. It will automaticall
 curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash
 ```
 
-> **For AI Agents (OpenClaw):** If you want to automatically install the `SKILL.md` instruction file into your `~/.openclaw/skills` directory, append `--openclaw` to the install command via bash:
+> **For AI Agents (OpenClaw / ZeroClaw):** If you want to automatically install the `SKILL.md` instruction file into your `~/.openclaw/skills` or `~/.zeroclaw/skills` directory, append `--openclaw` or `--zeroclaw` to the install command via bash:
 > `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --openclaw`
+> `curl -fsSL https://raw.githubusercontent.com/danielneiva/todo-cli/main/install.sh | bash -s -- --zeroclaw`
 
 Once installed, if this is your first time using Todo CLI, you need to set up the database and your preferences:
 
