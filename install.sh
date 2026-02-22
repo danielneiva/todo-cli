@@ -60,11 +60,13 @@ if [ "$INSTALL_OPENCLAW" = true ]; then
     OPENCLAW_DIR="$HOME/.openclaw/skills/$BIN_NAME"
     mkdir -p "$OPENCLAW_DIR"
     curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.md" -o "$OPENCLAW_DIR/SKILL.md"
-    echo "Skill installed to $OPENCLAW_DIR/SKILL.md"
+    curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.toml" -o "$OPENCLAW_DIR/SKILL.toml"
+    echo "Skill installed to $OPENCLAW_DIR"
 elif [ "$INSTALL_ZEROCLAW" = true ]; then
     echo "Installing ZeroClaw skill..."
     ZEROCLAW_DIR="$HOME/.zeroclaw/skills/$BIN_NAME"
     mkdir -p "$ZEROCLAW_DIR"
     curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.md" -o "$ZEROCLAW_DIR/SKILL.md"
-    echo "Skill installed to $ZEROCLAW_DIR/SKILL.md"
+    curl -sL "https://raw.githubusercontent.com/$REPO/main/SKILL.toml" -o "$ZEROCLAW_DIR/SKILL.toml"
+    echo "Skill installed to $ZEROCLAW_DIR"
 fi

@@ -1,0 +1,31 @@
+name = "todo-cli"
+description = "A complete GTD (Getting Things Done) CLI task manager using SQLite for persistence. Interact with it to manage user tasks, priorities, and workflow in the terminal."
+homepage = "https://github.com/danielneiva/todo-cli"
+
+[openclaw]
+emoji = "✅"
+
+[openclaw.requires]
+bins = ["todo-cli"]
+env = []
+
+[[openclaw.install]]
+id = "bash"
+kind = "bash"
+script = "./install.sh"
+bins = ["todo-cli"]
+label = "Install todo-cli (bash)"
+
+[zeroclaw]
+emoji = "✅"
+
+[zeroclaw.requires]
+bins = ["todo-cli"]
+env = []
+
+[[zeroclaw.install]]
+id = "bash"
+kind = "bash"
+script = "./install.sh"
+bins = ["todo-cli"]
+label = "Install todo-cli (bash)"
